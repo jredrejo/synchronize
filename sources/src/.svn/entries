@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="2"
+   name=""
+   committed-date="2007-08-01T08:31:19.581220Z"
+   url="https://forjamari.linex.org/repos/synchronize/src"
+   last-author="jredrejo"
+   kind="dir"
+   revision="2"/>
+<entry
+   name="synchronize"
+   kind="dir"/>
+</wc-entries>

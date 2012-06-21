@@ -1,0 +1,2 @@
+?package(synchronize):needs="text" section="Applications/System/Administration"\
+  title="synchronize" command="/usr/bin/synchronize"

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="4"
+   name=""
+   committed-date="2007-08-02T13:34:44.412683Z"
+   url="https://forjamari.linex.org/repos/synchronize/debian/po"
+   last-author="jredrejo"
+   kind="dir"
+   revision="4"/>
+<entry
+   committed-rev="8"
+   name="templates.pot"
+   text-time="2007-08-11T12:22:14.000000Z"
+   committed-date="2007-08-11T07:46:42.696364Z"
+   checksum="2365258a8f22798704554dd5e7d109a4"
+   last-author="jredrejo"
+   kind="file"
+   revision="8"/>
+<entry
+   committed-rev="8"
+   name="es.po"
+   text-time="2007-08-11T12:23:09.000000Z"
+   committed-date="2007-08-11T07:46:42.696364Z"
+   checksum="33540f96ba8f2882b7bf445d2524c962"
+   last-author="jredrejo"
+   kind="file"
+   revision="8"/>
+<entry
+   committed-rev="4"
+   name="POTFILES.in"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="e196a9245a10172950ede0e4aab87992"
+   last-author="jredrejo"
+   kind="file"/>
+</wc-entries>

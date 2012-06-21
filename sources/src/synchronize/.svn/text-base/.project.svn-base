@@ -1,0 +1,11 @@
+# Gambas Project File 1.0
+Title=synchronize
+Startup=clsMain
+Icon=synchronize.png
+Version=0.0.1
+Library=gb.settings
+Description=Synchronize will make instantaneous backup while you use your files and directories
+Authors=José L. Redrejo Rodríguez <jredrejo@debian.org>
+TabSize=2
+Translate=1
+Language=es_ES.UTF-8

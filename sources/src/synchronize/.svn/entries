@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="2"
+   name=""
+   committed-date="2007-08-01T08:31:19.581220Z"
+   url="https://forjamari.linex.org/repos/synchronize/src/synchronize"
+   last-author="jredrejo"
+   kind="dir"
+   revision="2"/>
+<entry
+   name=".lang"
+   kind="dir"/>
+<entry
+   committed-rev="6"
+   name="clsUnison.class"
+   text-time="2007-08-11T11:56:40.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="c9438e1a5bc4032eb51479915f030968"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="2"
+   name=".directory"
+   text-time="2007-08-01T11:20:47.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="0676e2036a7f0f30c4c66f8b1159f35b"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="2"
+   name="Utils.class"
+   text-time="2007-08-01T11:57:15.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="cd1f031722d0aa245d4fbc152cc1b802"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="2"
+   name=".project"
+   text-time="2007-08-01T11:20:47.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="1c31441853f7ba40d1cde3fcaa19236d"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="2"
+   name="clsInotify.class"
+   text-time="2007-08-01T11:56:45.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="7f2c2e01ef18f2c3947d4a49291506f7"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="2"
+   name=".icon.png"
+   text-time="2007-08-01T11:20:47.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="cf69ee82d547372245a4e905e1240f64"
+   last-author="jredrejo"
+   kind="file"
+   prop-time="2007-08-01T13:21:06.000000Z"/>
+<entry
+   committed-rev="6"
+   name="clsMain.class"
+   text-time="2007-08-11T11:55:22.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="e4533c90a18bdeb3cbb2da2ca800ee77"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="2"
+   name="synchronize.png"
+   text-time="2007-07-25T14:40:00.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="59db46b2f13dff07df546bce03f2747c"
+   last-author="jredrejo"
+   kind="file"
+   prop-time="2007-08-01T13:21:12.000000Z"/>
+<entry
+   committed-rev="2"
+   name=".settings"
+   text-time="2007-08-11T11:56:55.000000Z"
+   committed-date="2007-08-01T08:31:19.581220Z"
+   checksum="13b2d1dadb80800da65b8c9033f621c8"
+   last-author="jredrejo"
+   kind="file"/>
+</wc-entries>

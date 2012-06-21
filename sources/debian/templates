@@ -1,0 +1,27 @@
+Template: synchronize/remotehostname
+Type: string
+Description: Name of the remote host to send the backups
+ RemoteHostName defines the ip or dns available name of the computer where
+ the synchronized backup is going to be done.
+
+Template: synchronize/loginname
+Type: string
+Description: The name of the user login to access to the Remote Host Name
+ Notice that the ssh public key for the local user has to be placed at this
+ loginname home .ssh/authorized_keys file to be able to synchronize
+ .
+ Usually this loginname is the same as in the local machine.
+
+Template: synchronize/hostname
+Type: string
+Description: Name to identify the local host
+ When the ip of the local host of its network name is about to change, this
+ variable should be set to a fix value, otherwise the backup will begin as a new
+ backup whenever the ip or the hostname of the local host changes.
+
+Template: synchronize/debug
+Type: boolean
+Default: false
+Description: Active debugging messages
+ When debug is set to true the application will show in the console messages
+ that might be useful for debugging.

@@ -1,0 +1,4 @@
+[General]
+# RemoteHost="name of the host"
+# RemoteLoginName="name of the user in the remote host"
+# UnisonLocalHostName="identifier of the local host (in prevision of hostname changes)"

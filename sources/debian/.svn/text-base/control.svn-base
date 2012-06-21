@@ -1,0 +1,14 @@
+Source: synchronize
+Section: unknown
+Priority: extra
+Maintainer: root <root@unknown>
+Build-Depends: debhelper (>= 5), autotools-dev, gambas2-dev (>= 1.9.49+svn478), gambas2-gb-settings (>= 1.9.49+svn478)
+Standards-Version: 3.7.2
+
+Package: synchronize
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, gambas2-runtime ( >= 1.9.49+svn478), gambas2-gb-settings (>= 1.9.49+svn478), ucf, unison, inotify-tools, openssh-client | ssh
+Description: Backup selected files and dirs in real time
+ Tool for lazy people to make backups in real time to a remote
+ server.
+ 

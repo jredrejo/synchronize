@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+cfg=/etc/synchronize/preferences
+
+if [ -e $cfg ] ; then
+  . $cfg || true
+
+  [ "$remotehostname" ] && db_set synchronize/remotehostname "$remotehostname"
+  [ "$loginname" ] && db_set synchronize/loginname "$loginname"
+  [ "$localhostname" ] && db_set synchronize/hostname "$localhostname"
+  [ "$debugging" ] && db_set synchronize/debug "$debugging"
+
+fi
+
+db_input high synchronize/remotehostname || true
+db_input medium synchronize/hostname || true
+db_input medium synchronize/loginname || true
+db_input low synchronize/debug || true
+
+db_go || true
+

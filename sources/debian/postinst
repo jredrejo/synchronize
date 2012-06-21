@@ -1,0 +1,68 @@
+#! /bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+cfg=`mktemp -t` || exit 1
+
+create_synchronize_preferences ()
+{
+  cat > $cfg <<EOF
+#  /etc/synchronization/preferences - configuration file for synchronize(1)
+# RemoteHost="name of the host"
+# RemoteHost must always be set for synchronize to work
+#
+# RemoteLoginName="name of the user in the remote host"
+# RemoteLoginName has to be set if the login name in the remote host is not
+# the same as in the localhost
+#
+# UnisonLocalHostName="identifier of the local host"
+# UnisonLocalHostName is needed to identify the local host if it changes
+# often its ip or hostname
+#
+#
+#  This file can be modified by
+#  "dpkg-reconfigure synchronize" or by hand at your option.
+#
+[General]
+RemoteHost="$remotehostname"
+RemoteLoginName="$loginname"
+UnisonLocalHostName="$localhostname"
+Debug="$debugging"
+
+EOF
+  chown root:root $cfg
+  chmod 644 $cfg
+}
+
+get_debconf_values ()
+{
+  db_get synchronize/remotehostname
+  remotehostname="$RET"
+  db_get synchronize/loginname
+  loginname="$RET"
+  db_get synchronize/hostname
+  localhostname="$RET"
+  db_get synchronize/debug
+  if [ "$RET" = true ]; then 
+	debugging="1"
+  else
+	debugging="0"
+  fi
+}
+
+      # The config file was sourced by gpm.config, so the debconf values
+      # should match it except where the user changed them.
+      get_debconf_values
+      create_synchronize_preferences
+      #Preserve old preferences before generating a new one
+	#if [ -e /etc/synchronization/preferences ] ; then 
+	 #   mv /etc/synchronization/preferences /etc/synchronization/preferences.dpkg-old
+	#fi
+      ucf --debconf-ok $cfg /etc/synchronization/preferences
+      rm $cfg
+
+db_stop
+
+

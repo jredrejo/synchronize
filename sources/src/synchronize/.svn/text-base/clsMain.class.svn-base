@@ -1,0 +1,182 @@
+' Gambas class file
+
+' Gambas class file
+' This program IS free software; you can redistribute it AND/OR
+' modify it under the terms of the GNU General PUBLIC License AS
+' published by the Free Software Foundation; either version 2 of the
+' License, OR (at your option) any later version.
+' 
+' This program IS distributed IN the hope that it will be useful, but
+' IS provided AS IS, WITHOUT ANY WARRANTY; without even the implied
+' warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+' NON-INFRINGEMENT.  See the GNU General PUBLIC License FOR more details.
+' 
+' You should READ the GNU General PUBLIC License
+' IF you have non, WRITE TO the Free Software
+' Foundation, INC., 59 Temple Place - Suite 330, Boston,
+' # MA 02111-1307, USA.
+' ----------------------------------------------------------------------------
+' ################################################
+' # file name               : clsMain.class
+' # created in project      : synchronize
+' # created by              : José L. Redrejo Rodríguez
+' # mail                    : jredrejo@debian.org
+' # created at              : 7/18/2007
+' # last test with          : gambas2-1.9.49
+' ################################################
+
+STATIC miClase AS clsMain
+
+PRIVATE RemoteHost AS String
+PRIVATE RemoteUser AS String
+PRIVATE UnisonLocalHostName AS String
+PRIVATE targets AS String[]
+PRIVATE Notifications AS Object[]
+
+
+STATIC PUBLIC SUB Main()
+  
+  IF Application.Args.Count > 1 THEN 
+    IF Application.Args[1] = "--restore" THEN 
+      miClase = NEW clsMain(TRUE)
+    ELSE 
+      PRINT ("The only allowed argument is '--restore' to restore the Backups")
+      QUIT 
+    ENDIF 
+  ELSE 
+    miClase = NEW clsMain
+  ENDIF 
+END
+
+PUBLIC SUB _free()
+DIM notifyObject AS clsInotify
+
+  IF NOT IsNull(Notifications) THEN 
+    FOR EACH notifyObject IN Notifications
+        notifyObject._free
+    NEXT 
+    Notifications.Clear
+  ENDIF 
+    
+END
+
+PUBLIC SUB _New(OPTIONAL Restore AS Boolean = FALSE)
+DIM appSettings AS Settings
+DIM settingsPath AS String
+
+  IF NOT Exist(user.Home &/ ".synchronization") THEN TRY MKDIR user.Home &/ ".synchronization"    
+'Read application general settings:
+  settingsPath = user.Home &/ ".synchronization/preferences"
+  IF Exist(settingsPath) THEN 
+      TRY appSettings = NEW Settings(settingsPath)
+  ELSE 
+      TRY appSettings = NEW settings("/etc/synchronization/preferences")
+  ENDIF 
+  
+  TRY UnisonLocalHostName = appSettings["UnisonLocalHostName"]
+  TRY RemoteHost = appSettings["RemoteHost"]
+  TRY RemoteUser = appSettings["RemoteLoginName"]
+  IF appSettings["Debug"] = "1" THEN utils.Debugging = TRUE  
+'Read directories and or files to synchronize   
+  
+ IF NOT ReadTargets() OR RemoteHost = "" THEN 
+  PRINT ("There are no targets to monitorize and synchronize")
+  QUIT 
+ ELSE 
+  LaunchMonitors(Restore)
+ ENDIF 
+ 
+ RETURN 
+ 
+ CATCH 
+  PRINT ("Error trying to read preferences file. Check its format")
+  
+END
+
+PRIVATE FUNCTION ReadTargets() AS Boolean
+DIM fileTargets AS String
+DIM filename AS String
+  
+   targets = NEW String[]
+   filename = user.Home &/ ".synchronization/targets"
+   fileTargets = ""
+   IF Exist(filename) THEN
+     TRY fileTargets = File.Load(filename)
+   ELSE 
+      filename = "/etc/synchronization/targets"
+      IF Exist(filename) THEN TRY fileTargets = File.Load(filename)
+   ENDIF 
+   
+   IF fileTargets <> "" THEN loadTargets(fileTargets)
+      
+   RETURN (targets.Count > 0)
+  
+CATCH 
+  PRINT ERROR.Text
+  RETURN FALSE
+END
+
+PRIVATE SUB loadTargets(FileContents AS String)
+DIM bits AS String[]
+DIM bit AS String
+DIM relative AS String
+  bits = Split(FileContents, Chr$(10))
+  FOR EACH bit IN bits
+    IF Trim$(bit) = "" THEN CONTINUE 
+    IF Exist(user.Home &/ bit) THEN 
+            targets.Add(Trim$(bit))
+    ELSE 
+      relative = Utils.Relative(Trim$(bit), user.Home)
+      IF relative <> bit THEN 'only targets inside the user home are allowed:
+        IF Exist(relative) THEN targets.Add(Trim(relative))
+      ENDIF
+    ENDIF
+  NEXT 
+  
+END
+
+PRIVATE SUB LaunchMonitors(OPTIONAL Restore AS Boolean = FALSE)
+DIM target AS String
+DIM notifyObject AS clsInotify
+DIM i AS String
+
+  _free
+  Notifications = NEW Object[]
+  
+  FOR EACH target IN targets
+    notifyObject = NEW clsInotify(user.Home &/ target) AS "Notificaciones"
+    notifyObject.Unison = NEW clsUnison(target, RemoteHost, RemoteUser) AS "Unison"
+    IF UnisonLocalHostName <> "" THEN notifyObject.Unison.UnisonLocalHostName = UnisonLocalHostName
+    IF Restore THEN 
+      PRINT ("Restoring you will loose the last changes you have in your local copy of ") & target 
+      PRINT ("The local copy will be overritten by the contents in the remote copy, updated the previous time you used synchronize")
+      PRINT ("Are you sure you want to continue? (y/N)")
+      INPUT i
+      IF UCase$(i) <> ("Y") THEN QUIT
+      notifyObject.Unison.RestoreBackup
+    ELSE 
+      Notifications.Add(notifyObject)
+    ENDIF 
+  NEXT   
+   IF Restore THEN QUIT 
+END
+
+
+PUBLIC SUB Unison_WithoutAccess(path AS String)
+  
+  PRINT "Auth Error synchronizing " & path
+  
+END
+
+PUBLIC SUB Notificaciones_TargetChanged(path AS String, change AS String, directory AS Boolean, OPTIONAL path2 AS String = "")
+  
+  IF utils.Debugging THEN PRINT path, change, directory;
+  IF path2 <> "" THEN
+    IF utils.Debugging THEN PRINT path2
+  ELSE 
+   IF utils.Debugging THEN PRINT 
+  ENDIF
+    
+  LAST.Unison.SyncPath(path, change, directory, path2)
+
+END

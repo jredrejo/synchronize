@@ -1,0 +1,12 @@
+synchronize (0.1-2) unstable; urgency=low
+
+  * Fixes postinst to build preferences file
+
+ -- José L. Redrejo Rodríguez <jredrejo@debian.org>  Sat, 11 Aug 2007 14:08:33 +0200
+
+synchronize (0.1-1) unstable; urgency=low
+
+  * Initial release
+
+ -- José L. Redrejo Rodríguez <jredrejo@debian.org>  Thu,  2 Aug 2007 17:59:04 +0200
+

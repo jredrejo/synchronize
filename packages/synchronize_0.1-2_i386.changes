@@ -1,0 +1,31 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Format: 1.7
+Date: Sat, 11 Aug 2007 14:08:33 +0200
+Source: synchronize
+Binary: synchronize
+Architecture: source i386
+Version: 0.1-2
+Distribution: unstable
+Urgency: low
+Maintainer: root <root@unknown>
+Changed-By: José L. Redrejo Rodríguez <jredrejo@debian.org>
+Description: 
+ synchronize - Backup selected files and dirs in real time
+Changes: 
+ synchronize (0.1-2) unstable; urgency=low
+ .
+   * Fixes postinst to build preferences file
+Files: 
+ 16cb57c637a0b4e9a2ff9e62ca9bcd1a 571 unknown extra synchronize_0.1-2.dsc
+ 36a3cf2821d2bd1bac07b96e4bb84011 82768 unknown extra synchronize_0.1-2.tar.gz
+ 310de410feedf96bcee666d671256f12 12074 unknown extra synchronize_0.1-2_i386.deb
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+
+iD8DBQFG9S52mqVR2WapDeIRAhLeAJ924vfBBUQ3rKOWPHe/BeYGKh4SjwCfVjdj
+IVYxHDWVovz40XojSb/+tgU=
+=Y4jG
+-----END PGP SIGNATURE-----

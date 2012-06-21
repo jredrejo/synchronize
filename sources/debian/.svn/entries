@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="4"
+   name=""
+   committed-date="2007-08-02T13:34:44.412683Z"
+   url="https://forjamari.linex.org/repos/synchronize/debian"
+   last-author="jredrejo"
+   kind="dir"
+   revision="4"/>
+<entry
+   committed-rev="5"
+   name="control"
+   text-time="2007-08-02T18:39:49.000000Z"
+   committed-date="2007-08-02T13:39:02.871658Z"
+   checksum="dfb1eb0f857bfae18bd786dba7986be8"
+   last-author="jredrejo"
+   kind="file"
+   revision="5"/>
+<entry
+   committed-rev="4"
+   name="dirs"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="99ba64ff3dadd4d96970f8bc80e38676"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="4"
+   name="compat"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="1dcca23355272056f04fe8bf20edfce0"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="8"
+   name="postinst"
+   text-time="2007-08-11T12:46:32.000000Z"
+   committed-date="2007-08-11T07:46:42.696364Z"
+   checksum="c88ef2b7f4f1bea3b3ef608e8f759509"
+   last-author="jredrejo"
+   kind="file"
+   revision="8"/>
+<entry
+   committed-rev="4"
+   name="menu"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="675c4e26370e680c3d6278fd1c2ecfa8"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="8"
+   name="config"
+   text-time="2007-08-11T12:18:07.000000Z"
+   committed-date="2007-08-11T07:46:42.696364Z"
+   checksum="6eb53913489271121b28b184aff704fc"
+   last-author="jredrejo"
+   kind="file"
+   revision="8"/>
+<entry
+   committed-rev="7"
+   name="changelog"
+   text-time="2007-08-11T12:09:13.000000Z"
+   committed-date="2007-08-11T07:09:15.982261Z"
+   checksum="df95117c3992abd07efd06a5174ce169"
+   last-author="jredrejo"
+   kind="file"
+   revision="7"/>
+<entry
+   committed-rev="4"
+   name="manpage.1"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="23f2b9a22b01687bbc57e4bb7205127e"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="4"
+   name="copyright"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="74eed86d3dc7e8788685dcc34a9e1238"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="4"
+   name="docs"
+   text-time="2007-08-02T18:34:06.000000Z"
+   committed-date="2007-08-02T13:34:44.412683Z"
+   checksum="d41d8cd98f00b204e9800998ecf8427e"
+   last-author="jredrejo"
+   kind="file"/>
+<entry
+   committed-rev="6"
+   name="rules"
+   text-time="2007-08-11T11:59:31.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="a9034904268917208c8f03e6f8d297d4"
+   last-author="jredrejo"
+   kind="file"
+   prop-time="2007-08-02T18:34:39.000000Z"
+   revision="6"/>
+<entry
+   name="po"
+   kind="dir"/>
+<entry
+   committed-rev="8"
+   name="templates"
+   text-time="2007-08-11T12:17:11.000000Z"
+   committed-date="2007-08-11T07:46:42.696364Z"
+   checksum="86cb79e3f3efca86ca189cb5680d3965"
+   last-author="jredrejo"
+   kind="file"
+   revision="8"/>
+</wc-entries>

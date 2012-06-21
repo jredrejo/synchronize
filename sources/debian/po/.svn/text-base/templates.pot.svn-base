@@ -1,0 +1,88 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-08-11 14:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../templates:3
+msgid "Name of the remote host to send the backups"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:3
+msgid ""
+"RemoteHostName defines the ip or dns available name of the computer where "
+"the synchronized backup is going to be done."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:9
+msgid "The name of the user login to access to the Remote Host Name"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:9
+msgid ""
+"Notice that the ssh public key for the local user has to be placed at this "
+"loginname home .ssh/authorized_keys file to be able to synchronize"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:9
+msgid "Usually this loginname is the same as in the local machine."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:17
+msgid "Name to identify the local host"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:17
+msgid ""
+"When the ip of the local host of its network name is about to change, this "
+"variable should be set to a fix value, otherwise the backup will begin as a "
+"new backup whenever the ip or the hostname of the local host changes."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:25
+msgid "Active debugging messages"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:25
+msgid ""
+"When debug is set to true the application will show in the console messages "
+"that might be useful for debugging."
+msgstr ""

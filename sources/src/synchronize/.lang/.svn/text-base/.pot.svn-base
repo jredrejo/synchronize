@@ -1,0 +1,42 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-11-01 04:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clsMain.class:43
+msgid "The only allowed argument is '--restore' to restore the Backups"
+msgstr ""
+
+#: clsMain.class:83
+msgid "There are no targets to monitorize and synchronize"
+msgstr ""
+
+#: clsMain.class:92
+msgid "Error trying to read preferences file. Check its format"
+msgstr ""
+
+#: clsMain.class:151
+msgid ""
+"Restoring you will loose the last changes you have in your local copy of "
+msgstr ""
+
+#: clsMain.class:152
+msgid ""
+"The local copy will be overritten by the contents in the remote copy, "
+"updated the previous time you used synchronize"
+msgstr ""
+
+#: clsMain.class:153
+msgid "Are you sure you want to continue? (y/N)"
+msgstr ""
+
+#: clsMain.class:155
+msgid "Y"
+msgstr ""

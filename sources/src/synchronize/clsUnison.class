@@ -1,0 +1,314 @@
+' Gambas class file
+
+' This program IS free software; you can redistribute it AND/OR
+' modify it under the terms of the GNU General PUBLIC License AS
+' published by the Free Software Foundation; either version 2 of the
+' License, OR (at your option) any later version.
+' 
+' This program IS distributed IN the hope that it will be useful, but
+' IS provided AS IS, WITHOUT ANY WARRANTY; without even the implied
+' warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+' NON-INFRINGEMENT.  See the GNU General PUBLIC License FOR more details.
+' 
+' You should READ the GNU General PUBLIC License
+' IF you have non, WRITE TO the Free Software
+' Foundation, INC., 59 Temple Place - Suite 330, Boston,
+' # MA 02111-1307, USA.
+' ----------------------------------------------------------------------------
+' ################################################
+' # file name               : clsUnison.class
+' # created in project      : synchronize
+' # created by              : José L. Redrejo Rodríguez
+' # mail                    : jredrejo@debian.org
+' # created at              : 7/18/2007
+' # last test with          : gambas2-1.9.49
+' ################################################
+
+'unison >= 2.13.16 must be installed for this class to work
+
+PROPERTY RemoteHost AS String
+PRIVATE host AS String
+PROPERTY RemoteUserName AS String
+PRIVATE userName AS String
+PROPERTY READ LocalPath AS String
+PRIVATE stuff AS String
+
+PUBLIC UnisonLocalHostName AS String
+EVENT WithoutAccess(path AS String)
+PRIVATE noConnection AS Boolean
+
+PRIVATE profileName AS String
+PRIVATE root AS String
+PRIVATE stack AS String[]
+PRIVATE CONST stackLimit AS Integer = 3
+PRIVATE SyncProcess AS Process
+PRIVATE tmrWatchdog AS Timer
+
+PUBLIC SUB _new(path AS String, remoteHost AS String, OPTIONAL remoteUser AS String = "")
+  
+  IF remoteUser = "" THEN 
+    UserName = User.Name
+  ELSE 
+    UserName = remoteUser
+  ENDIF 
+  
+  Host = remoteHost
+  stuff = quote.Shell(path)
+  root = user.Home &/ stuff 
+  checkUnisonConfig
+  stack = NEW String[]
+  tmrWatchdog = NEW Timer AS "Watchdog"
+  tmrWatchdog.Delay = 2000
+  
+  IF NOT testConnection() THEN
+     RAISE WithoutAccess(stuff)
+  ELSE 
+    createProfile
+    firstConnection(TRUE)
+  ENDIF 
+  
+END
+
+PRIVATE SUB firstConnection(OPTIONAL forceBackup AS Boolean = FALSE)
+DIM command AS String
+
+  IF UnisonLocalHostName <> "" THEN command = "export UNISONLOCALHOSTNAME=" & UnisonLocalHostName & ";"
+  command = command & "unison " & profileName
+  IF forceBackup THEN command = command & " -prefer " & root
+  executeProcess(command)
+  tmrWatchdog.Enabled = TRUE
+    
+END
+
+
+PRIVATE SUB createProfile()
+DIM profileNamePath AS String
+DIM fileContents AS String
+  profileName = Replace$(stuff, "/", "_") & "-" & Host
+  profileNamePath = user.Home &/ ".unison" &/ profileName & ".prf"
+
+  IF Exist(profileNamePath) THEN 
+    RETURN 
+  ELSE 
+    fileContents = "include common" & Chr$(10)
+    fileContents = fileContents & "root = " & root & Chr$(10)
+    fileContents = fileContents & "root = " & "ssh://" & UserName & "@" & host &/ stuff & Chr$(10)
+    file.Save(profileNamePath, fileContents)  
+  ENDIF 
+
+END
+
+
+PRIVATE SUB resetProfile()
+DIM profileNamePath AS String  
+    profileNamePath = user.Home &/ ".unison" &/ profileName & ".prf"
+    TRY KILL profileNamePath
+    createProfile
+  
+END
+
+
+PRIVATE SUB checkUnisonConfig()
+DIM configFile AS String
+DIM fileContents AS String
+DIM changed AS Boolean
+
+'default.prf
+  configFile = user.Home &/ ".unison/default.prf"
+  IF NOT Exist(configFile) THEN 
+    TRY MKDIR user.Home &/ ".unison"
+  ELSE 
+    fileContents = file.Load(configFile)
+  ENDIF 
+  
+  changed = FALSE
+  
+   IF InStr(fileContents, "include common") = 0 THEN 
+      fileContents = fileContents & "include common" & Chr$(10)
+      changed = TRUE
+   ENDIF 
+   IF changed THEN file.Save(configFile, fileContents)
+  
+ 'common:
+  configFile = user.Home &/ ".unison/common"
+  fileContents = ""
+  changed = FALSE
+  IF Exist(configFile) THEN fileContents = file.Load(configFile)  
+  
+  IF InStr(fileContents, "rshargs") = 0 THEN 
+      fileContents = fileContents & "rshargs = -C" & Chr$(10)
+      changed = TRUE
+  ENDIF
+  IF InStr(fileContents, "Thumbs.db") = 0 THEN 
+    fileContents = fileContents & "ignore = Name Thumbs.db" & Chr$(10)
+    fileContents = fileContents & "ignore = Name *~" & Chr$(10)
+    fileContents = fileContents & "ignore = Name *.tmp" & Chr$(10)
+    fileContents = fileContents & "ignore = Name *.lock" & Chr$(10)
+    fileContents = fileContents & "ignore = Name lock" & Chr$(10)
+    fileContents = fileContents & "ignore = Name Cache" & Chr$(10)
+    fileContents = fileContents & "ignore = Name cache" & Chr$(10)
+    fileContents = fileContents & "ignore = Name .*" & Chr$(10)
+    changed = TRUE
+  ENDIF 
+  
+  IF InStr(fileContents, "batch") = 0 THEN 
+    fileContents = fileContents & "batch = true" & Chr$(10)
+    fileContents = fileContents & "auto = true" & Chr$(10)
+    changed = TRUE
+  ENDIF 
+  
+  IF changed THEN file.Save(configFile, fileContents)
+  
+END
+
+PRIVATE FUNCTION testConnection() AS Boolean
+DIM result AS String  
+
+  SHELL "ssh " & UserName & "@" & host & " unison -version" TO result 
+  noConnection = (result = "")
+  RETURN NOT noConnection
+END
+
+PRIVATE FUNCTION ExcludedFile(path AS String) AS Boolean
+
+ ' "ignore = Name *~" 
+ IF Right$(path, 1) = "~" THEN RETURN TRUE
+ 
+ '"ignore = Name .*" 
+ IF Left$(path, 1) = "." THEN RETURN TRUE
+ 
+ '  "ignore = Name *.tmp"
+  IF Len(path) >= 3 THEN 
+      IF UCase$(Right$(path, 3)) = "TMP" THEN RETURN TRUE    
+  ENDIF  
+
+'"ignore = Name lock"
+  IF UCase$(path) = "LOCK" THEN RETURN TRUE
+  
+'"ignore = Name *.lock"
+  IF Len(path) >= 5 THEN 
+      IF UCase$(Right$(path, 5)) = ".LOCK" THEN RETURN TRUE    
+  ENDIF 
+  
+' "ignore = Name Cache" 
+  IF UCase$(path) = "CACHE" THEN RETURN TRUE
+
+ '"ignore = Name Thumbs.db"
+  IF UCase$(path) = "THUMBS.DB" THEN RETURN TRUE
+    
+  RETURN FALSE
+END
+
+
+
+PUBLIC SUB SyncPath(path AS String, change AS String, OPTIONAL directory AS Boolean = FALSE, OPTIONAL path2 AS String = "")
+DIM recursive AS String
+DIM remoteRoute AS String
+DIM command AS String
+DIM relativePath AS String
+
+  relativePath = quote.Shell(Utils.Relative(path, user.Home))
+
+  IF excludedFile(quote.Shell(Utils.Relative(path, root))) THEN RETURN 
+  IF path2 <> "" THEN 
+      IF excludedFile(quote.Shell(Utils.Relative(path2, root))) THEN RETURN
+  ENDIF
+  IF directory THEN 
+    recursive = " -r "
+  ELSE 
+    recursive = ""
+  ENDIF   
+  remoteRoute = UserName & "@" & host  
+  command = ""
+    
+  SELECT CASE change
+  
+  CASE "CLOSE_WRITE"
+    IF UnisonLocalHostName <> "" THEN command = "export UNISONLOCALHOSTNAME=" & UnisonLocalHostName & ";"
+    command = command & "unison " & profileName & " -force " & root & " -path " & quote.Shell(Utils.Relative(path, root))
+    
+  CASE "CREATE"
+      command = "scp -C " & recursive & "\"" & path & "\" " & remoteRoute & ":" & "\"" & relativePath & "\""
+    
+  CASE "DELETE"
+      command = "ssh " & remoteRoute & " rm " & recursive & "\"" & relativePath & "\"" 
+
+  CASE "MOVED_TO"
+      command = "ssh " & remoteRoute & " mv \"" & relativePath & "\" \"" & quote.Shell(Utils.Relative(path2, user.Home)) & "\"" 
+    
+  END SELECT
+  
+  IF command <> "" THEN 
+    IF SyncProcess.State = Process.Stopped THEN 
+          executeProcess(command)
+    ELSE 
+          stack.Push(command)       
+    ENDIF 
+  ENDIF
+  
+END
+
+
+PRIVATE SUB executeProcess(command AS String)
+    IF utils.Debugging THEN PRINT command
+    SyncProcess = SHELL command 
+END
+
+PUBLIC SUB WatchDog_Timer()
+  IF stack.Count = 0 THEN RETURN 
+  IF SyncProcess.State <> Process.Running THEN 
+      IF stack.Count > stackLimit THEN 
+        stack.Clear
+        firstConnection
+      ELSE 
+        executeProcess(stack.Pop())
+      ENDIF 
+  ENDIF 
+  
+END
+
+PUBLIC SUB RestoreBackup()
+'CAUTION: This will replace ALL local data with remote data
+DIM command AS String  
+DIM result AS String
+  IF UnisonLocalHostName <> "" THEN command = "export UNISONLOCALHOSTNAME=" & UnisonLocalHostName & ";"
+  command = command & "unison " & profileName & " -force ssh://" & UserName & "@" & host &/ stuff
+  SHELL command WAIT TO result
+  IF result = "Aborting..." & Chr$(10) THEN 'local copy is empty
+       command = "scp -C -r " & UserName & "@" & host & ":" & "\"" & stuff & "\" \"" & user.Home & "/\""
+       SHELL command WAIT  
+  ENDIF 
+END
+
+PRIVATE FUNCTION RemoteUserName_Read() AS String
+
+  RETURN userName
+
+END
+
+PRIVATE SUB RemoteUserName_Write(Value AS String)
+
+  userName = Value
+  resetProfile
+
+END
+
+PRIVATE FUNCTION LocalPath_Read() AS String
+
+  RETURN stuff
+
+END
+
+
+PRIVATE FUNCTION RemoteHost_Read() AS String
+
+  RETURN host  
+
+END
+
+PRIVATE SUB RemoteHost_Write(Value AS String)
+
+  host = Value
+  resetProfile
+
+END

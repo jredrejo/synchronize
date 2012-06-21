@@ -1,0 +1,169 @@
+' Gambas class file
+
+' This program IS free software; you can redistribute it AND/OR
+' modify it under the terms of the GNU General PUBLIC License AS
+' published by the Free Software Foundation; either version 2 of the
+' License, OR (at your option) any later version.
+' 
+' This program IS distributed IN the hope that it will be useful, but
+' IS provided AS IS, WITHOUT ANY WARRANTY; without even the implied
+' warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+' NON-INFRINGEMENT.  See the GNU General PUBLIC License FOR more details.
+' 
+' You should READ the GNU General PUBLIC License
+' IF you have non, WRITE TO the Free Software
+' Foundation, INC., 59 Temple Place - Suite 330, Boston,
+' # MA 02111-1307, USA.
+' ----------------------------------------------------------------------------
+' ################################################
+' # file name               : clsNotify.class
+' # created in project      : synchronize
+' # created by              : José L. Redrejo Rodríguez
+' # mail                    : jredrejo@debian.org
+' # created at              : 7/18/2007
+' # last test with          : gambas2-1.9.49
+' ################################################
+
+' inotify-tools must be installed for this class to work
+
+EVENT FileCreated(path AS String)
+EVENT FileDeleted(path AS String)
+EVENT FileModified(path AS String)
+EVENT FileMoved(source AS String, target AS String)
+
+EVENT DirCreated(path AS String)
+EVENT DirMoved(source AS String, target AS String)
+EVENT DirDeleted(path AS String)
+
+EVENT TargetChanged(path AS String, change AS String, directory AS Boolean, OPTIONAL path2 AS String = "")
+
+PROPERTY target AS String
+
+PRIVATE monitoredPath AS String
+PRIVATE notifyProcess AS Process
+PRIVATE previousPath AS String
+PRIVATE previousDir AS Boolean
+PRIVATE MovedFlag AS Boolean
+PRIVATE tmrMoved AS Timer
+PUBLIC Unison AS clsUnison
+
+PRIVATE FUNCTION target_Read() AS String
+
+  RETURN monitoredPath  
+END
+
+PRIVATE SUB target_Write(Value AS String)
+DIM command AS String
+
+  IF NOT IsNull(notifyProcess) THEN TRY notifyProcess.Kill
+  monitoredPath = value
+  command = "inotifywait -r -m  -e move -e create -e close_write -e delete --format \"%e |%w%f\" " & quote.SHELL(monitoredPath)
+  IF Utils.Debugging THEN PRINT command
+  TRY notifyProcess = SHELL command FOR INPUT
+END
+
+PUBLIC SUB _new(target AS String)
+  MovedFlag = FALSE
+  tmrMoved = NEW Timer AS "tmrMoved" 'time to watch if a file has been moved out from the monitorized path
+  tmrMoved.Delay = 1000
+  target_Write(target)
+END
+
+PUBLIC SUB _free()
+  
+  TRY notifyProcess.Kill
+  TRY notifyProcess = NULL
+  
+END
+
+PUBLIC SUB Process_Read()
+DIM sStr AS String
+DIM bits1 AS String[]
+DIM bits2 AS String[]
+DIM path AS String
+DIM command AS String
+DIM directory AS Boolean
+
+
+  LINE INPUT #LAST, sStr
+  IF Utils.Debugging THEN PRINT "Inotify " & monitoredPath & "-----" & sStr
+
+  bits1 = Split(sStr, "|")
+
+  IF bits1.Count < 2 THEN RETURN 'useless text
+'Example of line returned by iNotify:
+'Inotify /root/Documentos-----DELETE,ISDIR -((-/root/Documentos/ss-((-
+  path = bits1[1]
+  bits2 = Split(bits1[0], ",")
+  directory = (InStr(bits1[0], "ISDIR") > 0)
+  command = Trim$(bits2[0])
+   
+  SELECT CASE command
+  CASE "CREATE"
+    IF directory THEN 
+      RAISE DirCreated(path)
+    ELSE 
+      RAISE FileCreated(path)
+    END IF
+    RAISE TargetChanged(path, command, directory)
+
+  CASE "DELETE"
+    IF directory THEN 
+      RAISE DirDeleted(path)
+    ELSE 
+      RAISE FileDeleted(path)
+    ENDIF 
+    RAISE TargetChanged(path, command, directory)
+      
+  CASE "CLOSE_WRITE"
+    RAISE FileModified(path)
+    RAISE TargetChanged(path, command, directory)
+  
+  CASE "MOVED_FROM"
+    previousPath = path
+    previousDir = directory
+    MovedFlag = TRUE
+    tmrMoved.Enabled = TRUE
+    
+  CASE "MOVED_TO"
+    tmrMoved.Enabled = FALSE
+    MovedFlag = FALSE
+    IF previousPath = "" THEN 'file or dir copied here
+      IF directory THEN 
+        RAISE DirCreated(path)
+      ELSE 
+        RAISE FileCreated(path)
+      END IF
+      RAISE TargetChanged(path, "CREATE", directory)    
+    
+    ELSE 'file or dir moved inside the monitored path
+      IF directory THEN 
+        RAISE DirMoved(previousPath, path)
+      ELSE 
+        RAISE FileMoved(previousPath, path)
+      ENDIF 
+      RAISE TargetChanged(previousPath, command, directory, path)
+    ENDIF
+    previousPath = ""
+    
+  END SELECT 
+
+    
+  RETURN 
+  
+  CATCH 
+    PRINT error.Text   
+END
+
+PUBLIC SUB tmrMoved_Timer()  
+  tmrMoved.Enabled = FALSE
+  IF MovedFlag THEN 
+      IF previousDir THEN 
+        RAISE DirDeleted(previousPath)
+      ELSE 
+        RAISE FileDeleted(previousPath)
+      ENDIF 
+      RAISE TargetChanged(previousPath, "DELETE", previousDir)
+  ENDIF 
+  previousPath = ""
+END

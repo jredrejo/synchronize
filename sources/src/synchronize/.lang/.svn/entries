@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="3"
+   name=""
+   committed-date="2007-08-02T10:31:32.174820Z"
+   url="https://forjamari.linex.org/repos/synchronize/src/synchronize/.lang"
+   last-author="jredrejo"
+   kind="dir"
+   revision="3"/>
+<entry
+   committed-rev="6"
+   name=".pot"
+   text-time="2007-08-11T11:55:46.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="7483040f3453f9f638493e89ea985906"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="es.mo"
+   text-time="2007-08-11T11:55:39.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="86a4842752c3f0569101be27691e80e6"
+   last-author="jredrejo"
+   kind="file"
+   prop-time="2007-08-01T14:17:16.000000Z"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="Utils.pot"
+   text-time="2007-08-11T11:55:23.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="addc6c35f801557a97696eb3c542b219"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="es.po"
+   text-time="2007-08-11T11:55:46.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="c4e95e46d2150efb40de64f107273965"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="clsInotify.pot"
+   text-time="2007-08-11T11:55:23.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="57d721605902258a2d040802b11c8e32"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="clsMain.pot"
+   text-time="2007-08-11T11:55:23.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="f9099d1db55c296ddcf097412b8dc1f5"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+<entry
+   committed-rev="6"
+   name="clsUnison.pot"
+   text-time="2007-08-11T11:55:23.000000Z"
+   committed-date="2007-08-11T07:01:41.876056Z"
+   checksum="0c6c3bddbb1986d8f865efd0dc01ed22"
+   last-author="jredrejo"
+   kind="file"
+   revision="6"/>
+</wc-entries>
